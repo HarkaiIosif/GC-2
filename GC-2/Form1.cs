@@ -14,7 +14,7 @@ namespace GC_2
         {
             //E1(e);
             //E2(e);
-            E3(e);
+            Att(e);
         }
         private  void E1(PaintEventArgs e)
         {
@@ -26,8 +26,8 @@ namespace GC_2
             int x = rnd.Next(10, this.ClientSize.Width - 10);
             int y=rnd.Next(10, this.ClientSize.Height - 10);
             Point q=new Point(x,y);
-            p.Color = Color.DarkOliveGreen;
-            g.DrawEllipse(p, x, y, 3, 3);
+            p.Color = Color.Yellow;
+            g.DrawEllipse(p, x, y, 4, 4);
             p.Color = Color.Black;
             for(int i = 0; i < n; i++)
             {
@@ -37,12 +37,12 @@ namespace GC_2
                 if (d1 <= d)
                 {
                     p.Color = Color.Red;
-                    g.DrawEllipse(p, x, y, 3, 3);
+                    g.DrawEllipse(p, x, y, 4, 4);
                     p.Color = Color.Blue;
                     g.DrawLine(p, x, y, q.X, q.Y);
                     p.Color = Color.Black;
                 }
-                else g.DrawEllipse(p, x, y, 3, 3);
+                else g.DrawEllipse(p, x, y, 4, 4);
             }
         }
         private void E2(PaintEventArgs e) 
@@ -50,7 +50,7 @@ namespace GC_2
             Graphics g = e.Graphics;
             Random rnd = new Random();
             Pen p = new Pen(Color.Black, 3);
-            int n = 10;
+            int n = 7;
             Point[] points = new Point[n];
             int x, y;
             for(int i = 0; i < n; i++)
@@ -148,5 +148,67 @@ namespace GC_2
 
             
         }
+        private void Att(PaintEventArgs e)
+        {
+            Graphics graphics = e.Graphics;
+            Pen p = new Pen(Color.Black, 3);
+            Random rnd = new Random();
+            int n = 100;
+            Point[] points = new Point[n];
+            for (int i = 0; i < n; i++)
+            {
+                int x = rnd.Next(100, this.ClientSize.Width - 100);
+                int y = rnd.Next(100, this.ClientSize.Height - 100);
+                points[i] = new Point(x, y);
+                graphics.DrawEllipse(p,x,y,4,4);    
+            }
+            long xc = 0, yc = 0;
+            for (int i = 0; i < n; i++)
+            {
+                xc += points[i].X;
+                yc += points[i].Y;
+            }
+            xc = xc / n; yc = yc / n;
+            p.Color=Color.Red;
+            graphics.DrawEllipse(p,xc,yc,4,4);
+            double lmax = 0, l = 0;
+            for (int i = 0; i < n; i++)
+            {
+                l = Math.Sqrt(Math.Pow(xc - points[i].X, 2) + Math.Pow(yc - points[i].Y, 2));
+                if (lmax < l) lmax = l;
+            }
+            graphics.DrawEllipse(p, (int)((int) xc - lmax), (int)((int) yc - lmax), (int)((int)2 * lmax), (int)((int)2 * lmax));
+        }
+        private void Att2(PaintEventArgs e)
+        {
+            Graphics g = e.Graphics;
+            Pen p=new Pen(Color.Black, 2);
+            Random rnd=new Random();
+            int n = 100;
+            Point[] points = new Point[n];
+            int xmin=int.MaxValue, xmax=int.MinValue, ymin=int.MaxValue, ymax=int.MinValue; 
+            for(int i=0;i<n;i++)
+            {
+                int x=rnd.Next(100,this.ClientSize.Width-100);
+                int y=rnd.Next(100,this.ClientSize.Height-100);
+                if (x > xmax) { xmax = x;
+                    ymax = y;
+                }
+                if (x < xmin) { ymin = y;
+                    xmin = x;
+                }
+                points[i]=new Point(x,y);
+                g.DrawEllipse(p,x,y,4,4);
+            }
+            int xc = xmax + xmin;
+            xc /= 2;
+            int yc = ymax + ymin;
+            yc /= 2;
+            p.Color= Color.Red;
+            g.DrawEllipse(p,xc,yc,4,4); 
+            float r=(float)Math.Sqrt(Math.Pow(xc-xmax,2)+Math.Pow(yc-ymax,2));
+            g.DrawEllipse(p,xc-r,yc-r,2*r,2*r);
+        }
+
     }
 }
